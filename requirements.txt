@@ -1,0 +1,15 @@
+Django==4.2.17
+mysqlclient==2.2.7
+Faker==33.3.1
+
+# ---------------------------------------------------------------------------
+# Windows / XAMPP note:
+# `mysqlclient` needs MySQL's C build tools and sometimes fails to install
+# on Windows. If `pip install -r requirements.txt` errors out on that line,
+# do this instead:
+#
+#   pip install Django==4.2.17 Faker==33.3.1 pymysql==1.1.1
+#
+# ...then uncomment the two lines at the top of
+# ecommerce_project/ecommerce_project/__init__.py.
+# ---------------------------------------------------------------------------

@@ -1,0 +1,74 @@
+{% extends 'store/base.html' %}
+{% block title %}Dashboard — ShopSphere{% endblock %}
+{% block content %}
+<h2 class="section-title">Analytics Dashboard</h2>
+<p class="helptext" style="margin-bottom:24px;">Live results from the database's aggregate queries — total sales, best sellers, monthly trends, and more.</p>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-label">Total Sales</div>
+        <div class="stat-value">${{ total_sales|floatformat:2 }}</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Total Orders</div>
+        <div class="stat-value">{{ total_orders }}</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Total Users</div>
+        <div class="stat-value">{{ total_users }}</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Out of Stock</div>
+        <div class="stat-value">{{ out_of_stock_count }}</div>
+    </div>
+</div>
+
+<div class="two-col">
+    <div class="panel">
+        <h3>Top 5 Best-Selling Products</h3>
+        {% for p in top_products %}
+        <div class="bar-row">
+            <span class="bar-label">{{ p.name|truncatechars:16 }}</span>
+            <div class="bar-track"><div class="bar-fill" style="width: {% widthratio p.units_sold max_units_sold 100 %}%;"></div></div>
+            <span class="bar-value">{{ p.units_sold }} sold</span>
+        </div>
+        {% empty %}
+        <p class="helptext">No sales data yet.</p>
+        {% endfor %}
+    </div>
+
+    <div class="panel">
+        <h3>Top Customer</h3>
+        {% if top_customer %}
+        <div class="cart-summary"><span>Username</span><span><strong>{{ top_customer.username }}</strong></span></div>
+        <div class="cart-summary"><span>Total Orders</span><span>{{ top_customer.order_count }}</span></div>
+        {% else %}
+        <p class="helptext">No orders yet.</p>
+        {% endif %}
+
+        <h3 style="margin-top:24px;">Products Rated Above 4★</h3>
+        <table class="styled">
+            <tbody>
+            {% for p in top_rated %}
+                <tr><td>{{ p.name }}</td><td>★ {{ p.avg_rating|floatformat:1 }}</td></tr>
+            {% empty %}
+                <tr><td class="helptext">No qualifying products yet.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="panel">
+    <h3>Monthly Sales</h3>
+    {% for row in monthly_sales %}
+    <div class="bar-row">
+        <span class="bar-label">{{ row.month|date:"M Y" }}</span>
+        <div class="bar-track"><div class="bar-fill" style="width: {% widthratio row.total max_month_total 100 %}%;"></div></div>
+        <span class="bar-value">${{ row.total }}</span>
+    </div>
+    {% empty %}
+    <p class="helptext">No order data yet.</p>
+    {% endfor %}
+</div>
+{% endblock %}

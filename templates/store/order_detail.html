@@ -1,0 +1,34 @@
+{% extends 'store/base.html' %}
+{% block title %}Order #{{ order.order_id }} — ShopSphere{% endblock %}
+{% block content %}
+<h2 class="section-title">Order #{{ order.order_id }}</h2>
+
+<div class="two-col">
+    <div class="panel">
+        <h3>Items</h3>
+        <table class="styled">
+            <thead><tr><th>Product</th><th>Qty</th><th>Price</th><th>Subtotal</th></tr></thead>
+            <tbody>
+            {% for item in order.items.all %}
+                <tr>
+                    <td>{{ item.product.name }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>${{ item.price }}</td>
+                    <td>${{ item.subtotal }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="panel">
+        <h3>Order Info</h3>
+        <div class="cart-summary"><span>Status</span><span class="status-badge status-{{ order.status }}">{{ order.status }}</span></div>
+        <div class="cart-summary"><span>Date</span><span>{{ order.order_date|date:"M d, Y H:i" }}</span></div>
+        <div class="cart-summary"><span>Shipping To</span><span>{{ order.shipping_address|default:"N/A" }}</span></div>
+        {% for payment in order.payments.all %}
+        <div class="cart-summary"><span>Payment</span><span>{{ payment.payment_method }} ({{ payment.status }})</span></div>
+        {% endfor %}
+        <div class="cart-summary total"><span>Total</span><span>${{ order.total_amount }}</span></div>
+    </div>
+</div>
+{% endblock %}

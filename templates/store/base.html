@@ -1,0 +1,81 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}ShopSphere{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="{% url 'home' %}" class="brand">
+                <span class="brand-icon">✦</span> ShopSphere
+            </a>
+            <form action="{% url 'home' %}" method="get" class="nav-search">
+                <input type="text" name="q" placeholder="Search products..." value="{{ request.GET.q|default:'' }}">
+                <button type="submit">⌕</button>
+            </form>
+            <div class="nav-links">
+                <a href="{% url 'home' %}">Shop</a>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'dashboard' %}">Dashboard</a>
+                    <a href="{% url 'order_history' %}">Orders</a>
+                    <a href="{% url 'cart' %}" class="cart-link">Cart{% if cart_count %} <span class="badge">{{ cart_count }}</span>{% endif %}</a>
+                    <div class="nav-user">
+                        <span class="avatar">{{ user.username|slice:":1"|upper }}</span>
+                        <div class="dropdown">
+                            <a href="{% url 'profile' %}">My Profile</a>
+                            <a href="{% url 'order_history' %}">My Orders</a>
+                            <a href="{% url 'logout' %}">Logout</a>
+                        </div>
+                    </div>
+                {% else %}
+                    <a href="{% url 'cart' %}">Cart</a>
+                    <a href="{% url 'login' %}" class="btn-nav-outline">Log In</a>
+                    <a href="{% url 'signup' %}" class="btn-nav-solid">Sign Up</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    {% if messages %}
+    <div class="messages-wrap">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div>
+                <h4>ShopSphere</h4>
+                <p>A full-stack e-commerce demo built on Django — showcasing schema design, CRUD, analytics queries, and indexing.</p>
+            </div>
+            <div>
+                <h5>Quick Links</h5>
+                <a href="{% url 'home' %}">All Products</a>
+                <a href="{% url 'dashboard' %}">Analytics Dashboard</a>
+            </div>
+            <div>
+                <h5>Account</h5>
+                <a href="{% url 'login' %}">Log In</a>
+                <a href="{% url 'signup' %}">Sign Up</a>
+            </div>
+        </div>
+        <p class="footer-bottom">&copy; 2026 ShopSphere Database Project</p>
+    </footer>
+
+    <script src="{% static 'js/main.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

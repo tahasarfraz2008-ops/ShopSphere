@@ -1,0 +1,33 @@
+{% extends 'store/base.html' %}
+{% block title %}Log In — ShopSphere{% endblock %}
+{% block content %}
+<div class="auth-wrap">
+    <h2>Welcome back</h2>
+    <p class="subtitle">Log in to continue shopping and track your orders.</p>
+
+    <form method="post" novalidate>
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="id_username">Username</label>
+            {{ form.username }}
+        </div>
+        <div class="form-group">
+            <label for="id_password">Password</label>
+            <div class="password-toggle">
+                {{ form.password }}
+                <span>Show</span>
+            </div>
+        </div>
+
+        {% if form.errors %}
+            <div class="field-error">Invalid username or password. Please try again.</div>
+        {% endif %}
+
+        <button type="submit" class="btn btn-primary btn-block">Log In</button>
+    </form>
+
+    <div class="auth-footer">
+        Don't have an account? <a href="{% url 'signup' %}">Sign up</a>
+    </div>
+</div>
+{% endblock %}

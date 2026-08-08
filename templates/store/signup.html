@@ -1,0 +1,85 @@
+{% extends 'store/base.html' %}
+{% block title %}Sign Up — ShopSphere{% endblock %}
+{% block content %}
+<div class="auth-wrap">
+    <h2>Create your account</h2>
+    <p class="subtitle">Join ShopSphere and start shopping in seconds.</p>
+
+    <form method="post" novalidate>
+        {% csrf_token %}
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="id_first_name">First Name</label>
+                {{ form.first_name }}
+                {% for error in form.first_name.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+            </div>
+            <div class="form-group">
+                <label for="id_last_name">Last Name</label>
+                {{ form.last_name }}
+                {% for error in form.last_name.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="id_username">Username</label>
+            {{ form.username }}
+            {% for error in form.username.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+        </div>
+
+        <div class="form-group">
+            <label for="id_email">Email Address</label>
+            {{ form.email }}
+            {% for error in form.email.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+        </div>
+
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="id_phone">Phone</label>
+                {{ form.phone }}
+            </div>
+            <div class="form-group">
+                <label for="id_city">City</label>
+                {{ form.city }}
+            </div>
+            <div class="form-group">
+                <label for="id_address">Address</label>
+                {{ form.address }}
+            </div>
+            <div class="form-group">
+                <label for="id_country">Country</label>
+                {{ form.country }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="id_password1">Password</label>
+            <div class="password-toggle">
+                {{ form.password1 }}
+                <span>Show</span>
+            </div>
+            <div class="strength-bar"><div class="strength-fill"></div></div>
+            <div class="helptext">Use 8+ characters, with a number, uppercase letter, and symbol.</div>
+            {% for error in form.password1.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+        </div>
+
+        <div class="form-group">
+            <label for="id_password2">Confirm Password</label>
+            <div class="password-toggle">
+                {{ form.password2 }}
+                <span>Show</span>
+            </div>
+            {% for error in form.password2.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+        </div>
+
+        {% if form.non_field_errors %}
+            {% for error in form.non_field_errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+        {% endif %}
+
+        <button type="submit" class="btn btn-primary btn-block">Create Account</button>
+    </form>
+
+    <div class="auth-footer">
+        Already have an account? <a href="{% url 'login' %}">Log in</a>
+    </div>
+</div>
+{% endblock %}

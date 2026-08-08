@@ -1,0 +1,34 @@
+{% extends 'store/base.html' %}
+{% block title %}My Orders — ShopSphere{% endblock %}
+{% block content %}
+<h2 class="section-title">My Orders</h2>
+
+{% if orders %}
+<div class="panel">
+    <table class="styled">
+        <thead>
+            <tr><th>Order #</th><th>Date</th><th>Items</th><th>Total</th><th>Status</th><th></th></tr>
+        </thead>
+        <tbody>
+        {% for order in orders %}
+            <tr>
+                <td>#{{ order.order_id }}</td>
+                <td>{{ order.order_date|date:"M d, Y" }}</td>
+                <td>{{ order.items.count }} item(s)</td>
+                <td>${{ order.total_amount }}</td>
+                <td><span class="status-badge status-{{ order.status }}">{{ order.status }}</span></td>
+                <td><a href="{% url 'order_detail' order.order_id %}" class="btn btn-outline btn-sm">View</a></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="empty-state">
+    <div class="icon">📦</div>
+    <h3>No orders yet</h3>
+    <p>Once you place an order, it will show up here.</p>
+    <a href="{% url 'home' %}" class="btn btn-primary" style="margin-top:16px;">Start Shopping</a>
+</div>
+{% endif %}
+{% endblock %}

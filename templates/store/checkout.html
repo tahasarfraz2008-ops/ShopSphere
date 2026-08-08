@@ -1,0 +1,39 @@
+{% extends 'store/base.html' %}
+{% block title %}Checkout — ShopSphere{% endblock %}
+{% block content %}
+<h2 class="section-title">Checkout</h2>
+
+<div class="two-col">
+    <div class="panel">
+        <h3>Shipping & Payment</h3>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label>Shipping Address</label>
+                <input type="text" name="shipping_address" value="{{ request.user.address }}" placeholder="Street, City, Country">
+            </div>
+            <div class="form-group">
+                <label>Payment Method</label>
+                <select name="payment_method">
+                    <option>Credit Card</option>
+                    <option>Debit Card</option>
+                    <option>PayPal</option>
+                    <option>Cash on Delivery</option>
+                    <option>Bank Transfer</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Place Order — ${{ total }}</button>
+        </form>
+    </div>
+    <div class="panel">
+        <h3>Order Items</h3>
+        {% for product, qty, subtotal in items %}
+        <div class="cart-summary">
+            <span>{{ product.name }} × {{ qty }}</span>
+            <span>${{ subtotal }}</span>
+        </div>
+        {% endfor %}
+        <div class="cart-summary total"><span>Total</span><span>${{ total }}</span></div>
+    </div>
+</div>
+{% endblock %}

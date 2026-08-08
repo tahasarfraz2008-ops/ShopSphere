@@ -1,0 +1,78 @@
+{% extends 'store/base.html' %}
+{% block title %}ShopSphere — Shop{% endblock %}
+{% block content %}
+
+<div class="hero">
+    <h1>Everything you need, all in one place.</h1>
+    <p>Browse our full catalog — powered by a relational database with real-time stock, ratings, and order tracking.</p>
+    <div class="hero-stats">
+        <div><strong>{{ total_products }}</strong><span>Products</span></div>
+        <div><strong>10</strong><span>Categories</span></div>
+        <div><strong>500+</strong><span>Orders Fulfilled</span></div>
+    </div>
+</div>
+
+<form method="get" class="filter-bar">
+    {% if query %}<input type="hidden" name="q" value="{{ query }}">{% endif %}
+    <select name="category" onchange="this.form.submit()">
+        <option value="">All Categories</option>
+        {% for cat in categories %}
+        <option value="{{ cat.category_id }}" {% if selected_category == cat.category_id|stringformat:"s" %}selected{% endif %}>{{ cat.name }}</option>
+        {% endfor %}
+    </select>
+    <select name="stock" onchange="this.form.submit()">
+        <option value="">Any Availability</option>
+        <option value="in" {% if stock == 'in' %}selected{% endif %}>In Stock</option>
+        <option value="out" {% if stock == 'out' %}selected{% endif %}>Out of Stock</option>
+    </select>
+    <select name="sort" onchange="this.form.submit()">
+        <option value="newest" {% if sort == 'newest' %}selected{% endif %}>Newest</option>
+        <option value="price_low" {% if sort == 'price_low' %}selected{% endif %}>Price: Low to High</option>
+        <option value="price_high" {% if sort == 'price_high' %}selected{% endif %}>Price: High to Low</option>
+        <option value="rating" {% if sort == 'rating' %}selected{% endif %}>Top Rated</option>
+    </select>
+    <span class="result-count">{{ page_obj.paginator.count }} results</span>
+</form>
+
+{% if page_obj %}
+<div class="product-grid">
+    {% for product in page_obj %}
+    <a href="{% url 'product_detail' product.product_id %}" class="product-card">
+        <div class="product-thumb">
+            📦
+            {% if product.stock_quantity > 0 %}
+                <span class="stock-tag stock-in">In Stock</span>
+            {% else %}
+                <span class="stock-tag stock-out">Out of Stock</span>
+            {% endif %}
+        </div>
+        <div class="product-info">
+            <span class="product-cat">{{ product.category.name|default:"General" }}</span>
+            <span class="product-name">{{ product.name }}</span>
+            <span class="product-rating">★ {{ product.average_rating }} ({{ product.reviews.count }})</span>
+            <div class="product-footer">
+                <span class="price">${{ product.price }}</span>
+                <span class="btn btn-outline btn-sm">View</span>
+            </div>
+        </div>
+    </a>
+    {% endfor %}
+</div>
+
+{% if page_obj.paginator.num_pages > 1 %}
+<div class="pagination">
+    {% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}&q={{ query }}&category={{ selected_category }}&sort={{ sort }}">‹ Prev</a>{% endif %}
+    <span class="current">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+    {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}&q={{ query }}&category={{ selected_category }}&sort={{ sort }}">Next ›</a>{% endif %}
+</div>
+{% endif %}
+
+{% else %}
+<div class="empty-state">
+    <div class="icon">🔍</div>
+    <h3>No products found</h3>
+    <p>Try adjusting your search or filters.</p>
+</div>
+{% endif %}
+
+{% endblock %}
